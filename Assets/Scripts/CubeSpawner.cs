@@ -25,7 +25,7 @@ public class CubeSpawner : MonoBehaviour
     private void TrySplitOrDestroy(CubeSpawner hitCube)
     {
         if (hitCube != this)
-            return;
+            return;// без этой проверки при клике на любой куб, событие срабатывает на все кубы на сцене...
 
         Destroy(gameObject);
 
@@ -33,12 +33,7 @@ public class CubeSpawner : MonoBehaviour
         {
             _currentSplitChance *= ChanceReductionFactor;
             CreateCubes();
-            // ExplodeObjects(newCubes, originalPosition);
         }
-        //else
-        //{
-        //Destroy(gameObject);
-        //}
     }
 
     private void CreateCubes()
@@ -55,12 +50,11 @@ public class CubeSpawner : MonoBehaviour
         Vector3 originalScale = transform.localScale;
 
         for (int i = 0; i < newCubes.Length; i++)
-        {// Instantiate<T>(T original, Transform parent, bool worldPositionStays) where T : Object
+        {
             GameObject newCube = Instantiate(_cube);
-            // GameObject newCube = Instantiate(_cube, transform, true);
             newCube.transform.localScale = originalScale / Divider;
             newCube.transform.position = originalPosition + new Vector3(0, 1, 0) + Random.insideUnitSphere * InstanceRadius;
-            newCube.GetComponent<CubeSpawner>().OnEnable();
+            newCube.GetComponent<CubeSpawner>().OnEnable();// не понимаю почему, скрипт CubeSpawner на новых кубах выключен... 
             newCube.GetComponent<Renderer>().material.color = Random.ColorHSV();
 
             newCubes[i] = newCube;

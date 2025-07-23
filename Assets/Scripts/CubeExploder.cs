@@ -4,27 +4,19 @@ using UnityEngine;
 
 public class CubeExploder : MonoBehaviour
 {
-    private const float Delay = 0.1f;
+    private const float Delay = 0.03f;
 
     [SerializeField] private float _explosionForce = 10f;
     [SerializeField] private float _explosionRadius = 8f;
 
-    //[SerializeField] private GameObject _cube;
     private Coroutine _coroutine;
+
     public void Explode()
     {
         Vector3 originalPosition = transform.position;
 
         foreach (Rigidbody item in GetExplodableObjects(transform.position, _explosionRadius))
-            //item.AddExplosionForce(_explosionForce, originalPosition, _explosionRadius);
             _coroutine = StartCoroutine(DelayExplode(item, originalPosition));
-        //if (_cube.TryGetComponent<Rigidbody>(out var rb))
-        //{
-        //    Vector3 originalPosition = transform.position;
-        //    _coroutine = StartCoroutine(DelayExplode(rb, originalPosition));
-        //    // DelayExplode(rb, originalPosition);
-        //    //rb.AddExplosionForce(_explosionForce, explosionCenter, _explosionRadius);
-        //}
     }
 
     private List<Rigidbody> GetExplodableObjects(Vector3 pos, float explosionRadius)
