@@ -6,17 +6,26 @@ public class CubeExploder : MonoBehaviour
 {
     private const float Delay = 0.03f;
 
-    [SerializeField] private float _explosionForce = 10f;
+    [SerializeField] private float _explosionForce = 333f;
     [SerializeField] private float _explosionRadius = 8f;
 
-    private Coroutine _coroutine;
+    private float _upwardsModifier = 1f;
+    private ForceMode _forceMode = ForceMode.Impulse;
 
     public void Explode()
     {
-        Vector3 originalPosition = transform.position;
-
-        foreach (Rigidbody item in GetExplodableObjects(transform.position, _explosionRadius))
-            _coroutine = StartCoroutine(DelayExplode(item, originalPosition));
+        Vector3 explosionPosition = transform.position;
+        var explodableObjects = GetExplodableObjects(explosionPosition, _explosionRadius);
+        foreach (var rigidbody in explodableObjects)
+        {
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.AddExplosionForce(
+                _explosionForce,
+                explosionPosition,
+                _explosionRadius,
+                _upwardsModifier,
+                _forceMode);
+        }
     }
 
     private List<Rigidbody> GetExplodableObjects(Vector3 pos, float explosionRadius)
@@ -30,19 +39,5 @@ public class CubeExploder : MonoBehaviour
                 objects.Add(item.attachedRigidbody);
 
         return objects;
-    }
-
-    private IEnumerator DelayExplode(Rigidbody rigidbody, Vector3 explosionCenter)
-    {
-        var wait = new WaitForSeconds(Delay);
-
-        //while (enabled)
-        //{
-        //    yield return wait;
-
-        //    rigidbody.AddExplosionForce(_explosionForce, explosionCenter, _explosionRadius);
-        //}
-        yield return wait;
-        rigidbody.AddExplosionForce(_explosionForce, explosionCenter, _explosionRadius);
     }
 }

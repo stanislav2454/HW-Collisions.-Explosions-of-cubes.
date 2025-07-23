@@ -320,6 +320,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7312055827166068427, guid: c955834accea1c04b8715311e58e1072, type: 3}
+      propertyPath: _explosionForce
+      value: 3333
+      objectReference: {fileID: 0}
     - target: {fileID: 8259582574701674472, guid: c955834accea1c04b8715311e58e1072, type: 3}
       propertyPath: m_Name
       value: Cube (2)
@@ -750,6 +754,10 @@ PrefabInstance:
     - target: {fileID: 6626576224310005544, guid: c955834accea1c04b8715311e58e1072, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7312055827166068427, guid: c955834accea1c04b8715311e58e1072, type: 3}
+      propertyPath: _explosionForce
+      value: 2222
       objectReference: {fileID: 0}
     - target: {fileID: 8259582574701674472, guid: c955834accea1c04b8715311e58e1072, type: 3}
       propertyPath: m_Name

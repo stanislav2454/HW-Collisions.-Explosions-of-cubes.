@@ -31,7 +31,7 @@ public class CubeSpawner : MonoBehaviour
 
         if (Random.value <= _currentSplitChance)
         {
-            _currentSplitChance *= ChanceReductionFactor;
+            Debug.LogWarning(_currentSplitChance);
             CreateCubes();
         }
     }
@@ -44,20 +44,26 @@ public class CubeSpawner : MonoBehaviour
         const float InstanceRadius = 1.5f;
 
         int newCubesCount = Random.Range(MinCubesCount, MaxCubesCount + 1);
-        GameObject[] newCubes = new GameObject[newCubesCount];
+        float newSplitChance = _currentSplitChance * ChanceReductionFactor;
 
-        Vector3 originalPosition = transform.position;
-        Vector3 originalScale = transform.localScale;
+        GameObject[] newCubes = new GameObject[newCubesCount];
 
         for (int i = 0; i < newCubes.Length; i++)
         {
             GameObject newCube = Instantiate(_cube);
-            newCube.transform.localScale = originalScale / Divider;
-            newCube.transform.position = originalPosition + new Vector3(0, 1, 0) + Random.insideUnitSphere * InstanceRadius;
+            CubeSpawner spawner = newCube.GetComponent<CubeSpawner>();
+            spawner.SetSplitChance(newSplitChance);
+            newCube.transform.localScale = transform.localScale / Divider;
+            newCube.transform.position = transform.position + new Vector3(0, 1, 0) + Random.insideUnitSphere * InstanceRadius;
             newCube.GetComponent<CubeSpawner>().OnEnable();// не понимаю почему, скрипт CubeSpawner на новых кубах выключен... 
             newCube.GetComponent<Renderer>().material.color = Random.ColorHSV();
 
-            newCubes[i] = newCube;
+            //  newCubes[i] = newCube;
         }
+    }
+
+    public void SetSplitChance(float chance)
+    {
+        _currentSplitChance = chance;
     }
 }
