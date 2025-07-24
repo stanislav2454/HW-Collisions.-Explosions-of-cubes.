@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CubeExploder : MonoBehaviour
 {
@@ -9,31 +8,16 @@ public class CubeExploder : MonoBehaviour
     private float _upwardsModifier = 1f;
     private ForceMode _forceMode = ForceMode.Impulse;
 
-    public void Explode(GameObject[] objects)
+    public void Explode(Cube[] cubes)
     {
-        Vector3 explosionPosition = transform.position;
-
-        foreach (var rigidbody in objects)
+        foreach (var cube in cubes)
         {
-            rigidbody.GetComponent<Rigidbody>().AddExplosionForce(
-                _explosionForce,
-                explosionPosition,
-                _explosionRadius,
-                _upwardsModifier,
-                _forceMode);
+            cube.Rigidbody.AddExplosionForce(
+           _explosionForce,
+           cube.transform.position,
+           _explosionRadius,
+           _upwardsModifier,
+           _forceMode);
         }
-    }
-
-    private List<Rigidbody> GetExplodableObjects(Vector3 pos, float explosionRadius)
-    {
-        Collider[] colliders = Physics.OverlapSphere(pos, explosionRadius);
-
-        List<Rigidbody> objects = new();
-
-        foreach (Collider item in colliders)
-            if (item.attachedRigidbody != null)
-                objects.Add(item.attachedRigidbody);
-
-        return objects;
     }
 }

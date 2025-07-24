@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CubeRaycaster : MonoBehaviour
+public class Raycaster : MonoBehaviour
 {
     [SerializeField] private float _maxDistance = 40f;
     [SerializeField] private InputReader _userInput;
@@ -8,7 +8,7 @@ public class CubeRaycaster : MonoBehaviour
     private Color hitColor = Color.red;
     private Camera _mainCamera;
 
-    public event System.Action<GameObject> OnCubeHit;
+    public event System.Action<Cube> CubeHitted;
 
     private void Awake() =>
        _mainCamera = Camera.main;
@@ -27,7 +27,7 @@ public class CubeRaycaster : MonoBehaviour
         {
             if (hit.transform.GetComponent<Cube>())
             {
-                OnCubeHit?.Invoke(hit.transform.gameObject);
+                CubeHitted?.Invoke(hit.collider.GetComponent<Cube>());
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, hitColor, 2f);
             }
             else
