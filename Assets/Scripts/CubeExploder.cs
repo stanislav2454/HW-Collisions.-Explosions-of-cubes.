@@ -1,25 +1,21 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CubeExploder : MonoBehaviour
 {
-    private const float Delay = 0.03f;
-
-    [SerializeField] private float _explosionForce = 333f;
+    [SerializeField] private float _explosionForce = 9f;
     [SerializeField] private float _explosionRadius = 8f;
 
     private float _upwardsModifier = 1f;
     private ForceMode _forceMode = ForceMode.Impulse;
 
-    public void Explode()
+    public void Explode(GameObject[] objects)
     {
         Vector3 explosionPosition = transform.position;
-        var explodableObjects = GetExplodableObjects(explosionPosition, _explosionRadius);
-        foreach (var rigidbody in explodableObjects)
+
+        foreach (var rigidbody in objects)
         {
-            rigidbody.velocity = Vector3.zero;
-            rigidbody.AddExplosionForce(
+            rigidbody.GetComponent<Rigidbody>().AddExplosionForce(
                 _explosionForce,
                 explosionPosition,
                 _explosionRadius,

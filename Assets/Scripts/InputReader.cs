@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class UserInput : MonoBehaviour
+public class InputReader : MonoBehaviour
 {
     public event Action MouseButtonDown;
 

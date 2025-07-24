@@ -3,67 +3,63 @@
 public class CubeSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject _cube;
+    [SerializeField] private CubeRaycaster _raycaster;
 
-    private CubeRaycaster _raycaster;
+    private Vector3 _cubePosition;
 
     private const float ChanceReductionFactor = 0.5f;
 
-    private float _currentSplitChance = 1f;
-
-    private void Awake()
-    {
-        GetComponent<Renderer>().material.color = Random.ColorHSV();
-        _raycaster = FindObjectOfType<CubeRaycaster>();
-    }
-
     private void OnEnable() =>
-        _raycaster.OnCubeHit += TrySplitOrDestroy;
+        _raycaster.OnCubeHit += OnCubeHit;
 
     private void OnDisable() =>
-        _raycaster.OnCubeHit -= TrySplitOrDestroy;
+        _raycaster.OnCubeHit -= OnCubeHit;
 
-    private void TrySplitOrDestroy(CubeSpawner hitCube)
+    private void OnCubeHit(GameObject hitCube)
     {
-        if (hitCube != this)
-            return;// без этой проверки при клике на любой куб, событие срабатывает на все кубы на сцене...
-
-        Destroy(gameObject);
-
-        if (Random.value <= _currentSplitChance)
+        if (hitCube.TryGetComponent<Cube>(out var cubeData))
         {
-            Debug.LogWarning(_currentSplitChance);
-            CreateCubes();
+            if (Random.value <= cubeData.SplitChance)
+            {
+                if (TryGetComponent(out CubeExploder exploder))
+                {
+                    var newCubes = CreateCubes(
+                        hitCube.transform.position,
+                        cubeData.SplitChance * ChanceReductionFactor,
+                        hitCube.transform.localScale);
+
+                    exploder.Explode(newCubes);
+                }
+            }
         }
+
+        Destroy(hitCube.gameObject);
     }
 
-    private void CreateCubes()
+    private GameObject[] CreateCubes(Vector3 position, float newSplitChance, Vector3 originalScale)
     {
         const int MinCubesCount = 2;
         const int MaxCubesCount = 6;
-        const float Divider = 2f;
         const float InstanceRadius = 1.5f;
 
         int newCubesCount = Random.Range(MinCubesCount, MaxCubesCount + 1);
-        float newSplitChance = _currentSplitChance * ChanceReductionFactor;
 
         GameObject[] newCubes = new GameObject[newCubesCount];
 
-        for (int i = 0; i < newCubes.Length; i++)
+        for (int i = 0; i < newCubesCount; i++)
         {
-            GameObject newCube = Instantiate(_cube);
-            CubeSpawner spawner = newCube.GetComponent<CubeSpawner>();
-            spawner.SetSplitChance(newSplitChance);
-            newCube.transform.localScale = transform.localScale / Divider;
-            newCube.transform.position = transform.position + new Vector3(0, 1, 0) + Random.insideUnitSphere * InstanceRadius;
-            newCube.GetComponent<CubeSpawner>().OnEnable();// не понимаю почему, скрипт CubeSpawner на новых кубах выключен... 
+            Vector3 randomOffset = Random.insideUnitSphere * InstanceRadius;
+            randomOffset.y = Mathf.Abs(randomOffset.y);
+            GameObject newCube = Instantiate(_cube, position + Vector3.up + randomOffset, Quaternion.identity);
+            newCube.transform.localScale = originalScale * newSplitChance;
+            if (newCube.TryGetComponent<Cube>(out var newCubeData))
+            {
+                newCubeData.SetSplitParameters(newSplitChance);
+            }
             newCube.GetComponent<Renderer>().material.color = Random.ColorHSV();
-
-            //  newCubes[i] = newCube;
+            newCubes[i] = newCube;
         }
-    }
 
-    public void SetSplitChance(float chance)
-    {
-        _currentSplitChance = chance;
+        return newCubes;
     }
 }
