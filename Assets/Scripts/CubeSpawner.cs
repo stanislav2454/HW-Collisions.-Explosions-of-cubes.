@@ -19,9 +19,8 @@ public class CubeSpawner : MonoBehaviour
         if (TryGetComponent(out Exploder exploder))
         {
             if (Random.value <= hitCube.SplitChance)
-            {// todo del "var newCubes ="
+            {
                 CreateCubes(
-                //var newCubes = CreateCubes(
                     hitCube.transform.position,
                     hitCube.SplitChance * ChanceReductionFactor,
                     hitCube.transform.localScale);
@@ -29,7 +28,7 @@ public class CubeSpawner : MonoBehaviour
             else
             {
                 var explodedObjects = hitCube.GetExplodableObjects(_explosionRadius);
-                exploder.Explode(explodedObjects, hitCube.transform.position, _explosionRadius);
+                exploder.Explode(explodedObjects, hitCube.transform.position);
             }
         }
 

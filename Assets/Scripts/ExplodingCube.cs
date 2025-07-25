@@ -31,7 +31,7 @@ public class ExplodingCube : MonoBehaviour
         var explodedObjects = hittedCube.GetExplodableObjects();
 
         if (TryGetComponent(out Exploder exploder))
-            exploder.Explode(explodedObjects, hittedCube.transform.position, _explosionRadius);
+            exploder.Explode(explodedObjects, hittedCube.transform.position);
 
         Destroy(hittedCube.gameObject);
     }

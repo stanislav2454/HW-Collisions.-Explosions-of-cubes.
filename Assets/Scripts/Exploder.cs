@@ -14,33 +14,39 @@ public class Exploder : MonoBehaviour
     {
         foreach (var cube in cubes)
         {
+            float scale = cube.transform.localScale.x;
+            float scaledExplosionRadius = _explosionRadius / cube.transform.localScale.x;
+
             cube.Rigidbody.AddExplosionForce(
-           _maxExplosionForce,
+           CalculateExplosionForce(cube.Rigidbody, cube.transform.position, scale),
            cube.transform.position,
-           _explosionRadius,
+           scaledExplosionRadius,
            _upwardsModifier,
            _forceMode);
         }
     }
 
-    public void Explode(List<Rigidbody> cubes, Vector3 expCenter, float explosionRadius)
+    public void Explode(List<Rigidbody> cubes, Vector3 expCenter)
     {
         foreach (var cube in cubes)
         {
+            float scale = cube.transform.localScale.x;
+            float scaledExplosionRadius = _explosionRadius / scale;
+
             cube.AddExplosionForce(
-                CalculateExplosionForce(cube, expCenter),
+                CalculateExplosionForce(cube, expCenter, scale),
                 expCenter,
-                explosionRadius);
+                scaledExplosionRadius);
         }
     }
 
-    private float CalculateExplosionForce(Rigidbody cube, Vector3 expCenter)
+    private float CalculateExplosionForce(Rigidbody cube, Vector3 expCenter, float scale)
     {
         float distance = Vector3.Distance(expCenter, cube.position);
-        Debug.Log(distance);
-        if (distance < 0.01f)
-            return _maxExplosionForce;
 
-        return _maxExplosionForce / distance;
+        if (distance < 0.01f)
+            return _maxExplosionForce / scale;
+
+        return (_maxExplosionForce / scale) / distance;
     }
 }

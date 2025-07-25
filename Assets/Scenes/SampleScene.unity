@@ -685,7 +685,7 @@ PrefabInstance:
       objectReference: {fileID: 9103267}
     - target: {fileID: 8522174467138008870, guid: dc678c7eaa2915548bf5b114a7c3c6dd, type: 3}
       propertyPath: _maxExplosionForce
-      value: 5
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
