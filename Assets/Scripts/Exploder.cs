@@ -37,7 +37,7 @@ public class Exploder : MonoBehaviour
     private float CalculateExplosionForce(Rigidbody cube, Vector3 expCenter)
     {
         float distance = Vector3.Distance(expCenter, cube.position);
-
+        Debug.Log(distance);
         if (distance < 0.01f)
             return _maxExplosionForce;
 

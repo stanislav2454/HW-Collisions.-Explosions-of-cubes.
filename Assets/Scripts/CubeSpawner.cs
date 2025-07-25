@@ -4,25 +4,33 @@ public class CubeSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject _cube;
     [SerializeField] private Raycaster _raycaster;
+    [SerializeField] private float _explosionRadius = 11f;
 
     private const float ChanceReductionFactor = 0.5f;
 
-    //private void OnEnable() =>
-    //    _raycaster.CubeHitted += TrySplitOrDestroy;
+    private void OnEnable() =>
+        _raycaster.CubeHitted += TrySplitOrDestroy;
 
-    //private void OnDisable() =>
-    //    _raycaster.CubeHitted -= TrySplitOrDestroy;
+    private void OnDisable() =>
+        _raycaster.CubeHitted -= TrySplitOrDestroy;
 
     private void TrySplitOrDestroy(Cube hitCube)
     {
-        if (Random.value <= hitCube.SplitChance && TryGetComponent(out Exploder exploder))
+        if (TryGetComponent(out Exploder exploder))
         {
-            var newCubes = CreateCubes(
-                hitCube.transform.position,
-                hitCube.SplitChance * ChanceReductionFactor,
-                hitCube.transform.localScale);
-
-            exploder.Explode(newCubes);
+            if (Random.value <= hitCube.SplitChance)
+            {// todo del "var newCubes ="
+                CreateCubes(
+                //var newCubes = CreateCubes(
+                    hitCube.transform.position,
+                    hitCube.SplitChance * ChanceReductionFactor,
+                    hitCube.transform.localScale);
+            }
+            else
+            {
+                var explodedObjects = hitCube.GetExplodableObjects(_explosionRadius);
+                exploder.Explode(explodedObjects, hitCube.transform.position, _explosionRadius);
+            }
         }
 
         Destroy(hitCube.gameObject);

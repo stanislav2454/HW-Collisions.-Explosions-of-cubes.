@@ -8,7 +8,9 @@ public class ExplodingCube : MonoBehaviour
     [SerializeField] private float _explosionRadius = 11f;
 
     private Renderer _renderer;
+    private float _splitChance = 1f;
 
+    public float SplitChance => _splitChance;
     public Rigidbody Rigidbody { get; private set; }
 
     private void Awake()
@@ -19,19 +21,19 @@ public class ExplodingCube : MonoBehaviour
     }
 
     private void OnEnable() =>
-        _raycaster.CubeHitted += TryExplodeAndDestroy;
+        _raycaster.ExplodingCubeHitted += TryExplodeAndDestroy;
 
     private void OnDisable() =>
-        _raycaster.CubeHitted -= TryExplodeAndDestroy;
+        _raycaster.ExplodingCubeHitted -= TryExplodeAndDestroy;
 
-    private void TryExplodeAndDestroy(ExplodingCube hitCube)
+    private void TryExplodeAndDestroy(ExplodingCube hittedCube)
     {
-        var expObjs = hitCube.GetExplodableObjects();
+        var explodedObjects = hittedCube.GetExplodableObjects();
 
         if (TryGetComponent(out Exploder exploder))
-            exploder.Explode(expObjs, hitCube.transform.position, _explosionRadius);
+            exploder.Explode(explodedObjects, hittedCube.transform.position, _explosionRadius);
 
-        Destroy(hitCube.gameObject);
+        Destroy(hittedCube.gameObject);
     }
 
     private void SetRandomColor() =>

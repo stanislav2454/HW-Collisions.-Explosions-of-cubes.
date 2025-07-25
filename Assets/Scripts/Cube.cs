@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(Renderer))]
@@ -23,6 +24,20 @@ public class Cube : MonoBehaviour
         _splitChance = newSplitChance;
         UpdateScale();
         SetRandomColor();
+    }
+
+    public List<Rigidbody> GetExplodableObjects(float explosionRadius)
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius);
+        List<Rigidbody> cubes = new();
+
+        foreach (var item in hits)
+        {
+            if (item.attachedRigidbody != null)
+                cubes.Add(item.attachedRigidbody);
+        }
+
+        return cubes;
     }
 
     private void UpdateScale() =>
