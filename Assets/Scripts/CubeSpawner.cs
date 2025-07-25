@@ -7,15 +7,15 @@ public class CubeSpawner : MonoBehaviour
 
     private const float ChanceReductionFactor = 0.5f;
 
-    private void OnEnable() =>
-        _raycaster.CubeHitted += TrySplitOrDestroy;
+    //private void OnEnable() =>
+    //    _raycaster.CubeHitted += TrySplitOrDestroy;
 
-    private void OnDisable() =>
-        _raycaster.CubeHitted -= TrySplitOrDestroy;
+    //private void OnDisable() =>
+    //    _raycaster.CubeHitted -= TrySplitOrDestroy;
 
     private void TrySplitOrDestroy(Cube hitCube)
     {
-        if (Random.value <= hitCube.SplitChance && TryGetComponent(out CubeExploder exploder))
+        if (Random.value <= hitCube.SplitChance && TryGetComponent(out Exploder exploder))
         {
             var newCubes = CreateCubes(
                 hitCube.transform.position,

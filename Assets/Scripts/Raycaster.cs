@@ -8,7 +8,7 @@ public class Raycaster : MonoBehaviour
     private Color hitColor = Color.red;
     private Camera _mainCamera;
 
-    public event System.Action<Cube> CubeHitted;
+    public event System.Action<ExplodingCube> CubeHitted;
 
     private void Awake() =>
        _mainCamera = Camera.main;
@@ -25,9 +25,9 @@ public class Raycaster : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, _maxDistance))
         {
-            if (hit.transform.GetComponent<Cube>())
+            if (hit.transform.GetComponent<ExplodingCube>())
             {
-                CubeHitted?.Invoke(hit.collider.GetComponent<Cube>());
+                CubeHitted?.Invoke(hit.collider.GetComponent<ExplodingCube>());
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, hitColor, 2f);
             }
             else
