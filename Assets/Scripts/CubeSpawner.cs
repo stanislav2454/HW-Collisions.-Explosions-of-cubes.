@@ -2,7 +2,7 @@
 
 public class CubeSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject _cube;
+    [SerializeField] private Cube _cube;
     [SerializeField] private Raycaster _raycaster;
     [SerializeField] private float _explosionRadius = 11f;
 
@@ -53,7 +53,7 @@ public class CubeSpawner : MonoBehaviour
             newCube.transform.localScale = originalScale * newSplitChance;
 
             var cubeComponent = newCube.GetComponent<Cube>();
-            cubeComponent.SetSplitParameters(newSplitChance);
+            cubeComponent.Initialize(newSplitChance);
 
             newCubes[i] = cubeComponent;
         }

@@ -7,25 +7,6 @@ public class Exploder : MonoBehaviour
 
     private float _explosionRadius = 8f;
 
-    private float _upwardsModifier = 1f;
-    private ForceMode _forceMode = ForceMode.Impulse;
-
-    public void Explode(Cube[] cubes)
-    {
-        foreach (var cube in cubes)
-        {
-            float scale = cube.transform.localScale.x;
-            float scaledExplosionRadius = _explosionRadius / cube.transform.localScale.x;
-
-            cube.Rigidbody.AddExplosionForce(
-           CalculateExplosionForce(cube.Rigidbody, cube.transform.position, scale),
-           cube.transform.position,
-           scaledExplosionRadius,
-           _upwardsModifier,
-           _forceMode);
-        }
-    }
-
     public void Explode(List<Rigidbody> cubes, Vector3 expCenter)
     {
         foreach (var cube in cubes)
@@ -34,9 +15,9 @@ public class Exploder : MonoBehaviour
             float scaledExplosionRadius = _explosionRadius / scale;
 
             cube.AddExplosionForce(
-                CalculateExplosionForce(cube, expCenter, scale),
-                expCenter,
-                scaledExplosionRadius);
+                      CalculateExplosionForce(cube, expCenter, scale),
+                      expCenter,
+                      scaledExplosionRadius);
         }
     }
 

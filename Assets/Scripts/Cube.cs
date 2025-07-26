@@ -1,27 +1,22 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(Renderer))]
 public class Cube : MonoBehaviour
 {
-    private float _splitChance = 1f;
     private Vector3 _initialScale;
     private Renderer _renderer;
 
-    public float SplitChance => _splitChance;
+    public float SplitChance { get; private set; } = 1f;
     public Rigidbody Rigidbody { get; private set; }
-
-    private void Awake()
+    // Вопрос по код конвенции:
+    //   порядок расположения методов как в обычном программировании
+    //   или в геймдеве\Unity свои, устоявшиеся практики ?
+    // П.С: я методы отсортировал по модификатору доступа...
+    //   так можно/нужно/нелзя ?
+    public void Initialize(float newSplitChance)
     {
-        Rigidbody = GetComponent<Rigidbody>();
-        _renderer = GetComponent<Renderer>();
-        _initialScale = transform.localScale;
-        SetRandomColor();
-    }
-
-    public void SetSplitParameters(float newSplitChance)
-    {
-        _splitChance = newSplitChance;
+        SplitChance = newSplitChance;
         UpdateScale();
         SetRandomColor();
     }
@@ -40,8 +35,16 @@ public class Cube : MonoBehaviour
         return cubes;
     }
 
+    private void Awake()
+    {
+        Rigidbody = GetComponent<Rigidbody>();
+        _renderer = GetComponent<Renderer>();
+        _initialScale = transform.localScale;
+        SetRandomColor();
+    }
+
     private void UpdateScale() =>
-        transform.localScale = _initialScale * _splitChance;
+        transform.localScale = _initialScale * SplitChance;
 
     private void SetRandomColor() =>
         _renderer.material.color = Random.ColorHSV();
