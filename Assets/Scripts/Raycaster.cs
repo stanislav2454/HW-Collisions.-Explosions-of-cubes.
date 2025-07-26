@@ -6,6 +6,7 @@ public class Raycaster : MonoBehaviour
     [SerializeField] private InputReader _userInput;
 
     private Color hitColor = Color.red;
+    private Color _missColor = Color.blue;
     private Camera _mainCamera;
 
     public event System.Action<Cube> CubeHitted;
@@ -21,18 +22,20 @@ public class Raycaster : MonoBehaviour
 
     public void PerformRaycast()
     {
+        const float Duration = 3f;
+
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, _maxDistance))
         {
-            if (hit.transform.GetComponent<Cube>())
+            if (hit.transform.TryGetComponent(out Cube cube))
             {
-                CubeHitted?.Invoke(hit.collider.GetComponent<Cube>());
-                Debug.DrawRay(ray.origin, ray.direction * hit.distance, hitColor, 2f);
+                CubeHitted?.Invoke(cube);
+                Debug.DrawRay(ray.origin, ray.direction * hit.distance, hitColor, Duration);
             }
             else
             {
-                Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.blue, 2f);
+                Debug.DrawRay(ray.origin, ray.direction * hit.distance, _missColor, Duration);
             }
         }
     }

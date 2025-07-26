@@ -2,20 +2,32 @@
 
 public class CubeSpawner : MonoBehaviour
 {
-    [SerializeField] private Cube _cube;
+    [SerializeField] private Cube _cubePrefab;
     [SerializeField] private Raycaster _raycaster;
     [SerializeField] private float _explosionRadius = 11f;
 
     private const float ChanceReductionFactor = 0.5f;
 
-    private void OnEnable() =>
-        _raycaster.CubeHitted += TrySplitOrDestroy;
+    private void OnEnable()
+    {
+        if (_raycaster != null)
+        {
+            _raycaster.CubeHitted += TrySplitOrDestroy;
+        }
+    }
 
-    private void OnDisable() =>
-        _raycaster.CubeHitted -= TrySplitOrDestroy;
+    private void OnDisable()
+    {
+        if (_raycaster != null)
+        {
+            _raycaster.CubeHitted -= TrySplitOrDestroy;
+        }
+    }
 
     private void TrySplitOrDestroy(Cube hitCube)
     {
+        if (hitCube == null) return;
+
         if (TryGetComponent(out Exploder exploder))
         {
             if (Random.value <= hitCube.SplitChance)
@@ -49,13 +61,10 @@ public class CubeSpawner : MonoBehaviour
         {
             Vector3 randomOffset = Random.insideUnitSphere * InstanceRadius;
             randomOffset.y = Mathf.Abs(randomOffset.y);
-            var newCube = Instantiate(_cube, position + Vector3.up + randomOffset, Quaternion.identity);
+            Cube newCube = Instantiate(_cubePrefab, position + Vector3.up + randomOffset, Quaternion.identity);
             newCube.transform.localScale = originalScale * newSplitChance;
-
-            var cubeComponent = newCube.GetComponent<Cube>();
-            cubeComponent.Initialize(newSplitChance);
-
-            newCubes[i] = cubeComponent;
+            newCube.Initialize(newSplitChance);
+            newCubes[i] = newCube;
         }
 
         return newCubes;

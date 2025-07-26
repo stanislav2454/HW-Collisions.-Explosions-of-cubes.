@@ -9,11 +9,15 @@ public class Cube : MonoBehaviour
 
     public float SplitChance { get; private set; } = 1f;
     public Rigidbody Rigidbody { get; private set; }
-    // Вопрос по код конвенции:
-    //   порядок расположения методов как в обычном программировании
-    //   или в геймдеве\Unity свои, устоявшиеся практики ?
-    // П.С: я методы отсортировал по модификатору доступа...
-    //   так можно/нужно/нелзя ?
+
+    private void Awake()
+    {
+        Rigidbody = GetComponent<Rigidbody>();
+        _renderer = GetComponent<Renderer>();
+        _initialScale = transform.localScale;
+        SetRandomColor();
+    }
+
     public void Initialize(float newSplitChance)
     {
         SplitChance = newSplitChance;
@@ -33,14 +37,6 @@ public class Cube : MonoBehaviour
         }
 
         return cubes;
-    }
-
-    private void Awake()
-    {
-        Rigidbody = GetComponent<Rigidbody>();
-        _renderer = GetComponent<Renderer>();
-        _initialScale = transform.localScale;
-        SetRandomColor();
     }
 
     private void UpdateScale() =>
