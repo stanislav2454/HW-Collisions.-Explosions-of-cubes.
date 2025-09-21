@@ -11,22 +11,19 @@ public class CubeSpawner : MonoBehaviour
     private void OnEnable()
     {
         if (_raycaster != null)
-        {
             _raycaster.CubeHitted += TrySplitOrDestroy;
-        }
     }
 
     private void OnDisable()
     {
         if (_raycaster != null)
-        {
             _raycaster.CubeHitted -= TrySplitOrDestroy;
-        }
     }
 
     private void TrySplitOrDestroy(Cube hitCube)
     {
-        if (hitCube == null) return;
+        if (hitCube == null)
+            return;
 
         if (TryGetComponent(out Exploder exploder))
         {

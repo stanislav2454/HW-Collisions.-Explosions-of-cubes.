@@ -1,9 +1,8 @@
-using UnityEngine.Events;
 using UnityEngine;
 
 public class InputReader : MonoBehaviour
 {
-    public event UnityAction MouseButtonDown;
+    public event System.Action MouseButtonDown;
 
     private void Update()
     {

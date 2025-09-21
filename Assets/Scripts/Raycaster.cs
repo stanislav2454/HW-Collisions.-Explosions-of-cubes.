@@ -30,7 +30,7 @@ public class Raycaster : MonoBehaviour
         {
             if (hit.transform.TryGetComponent(out Cube cube))
             {
-                CubeHitted?.Invoke(cube);
+                CubeHitted?.Invoke(cube);//-> CubeSpawner-> void TrySplitOrDestroy (Cube hitCube)
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, hitColor, Duration);
             }
             else

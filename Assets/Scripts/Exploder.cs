@@ -21,13 +21,24 @@ public class Exploder : MonoBehaviour
         }
     }
 
-    private float CalculateExplosionForce(Rigidbody cube, Vector3 expCenter, float scale)
-    {
-        float distance = Vector3.Distance(expCenter, cube.position);
+    //private float CalculateExplosionForce(Rigidbody cube, Vector3 expCenter, float scale)
+    //{//Предыдущая версия, не оптимизированная
+    //    float distance = Vector3.Distance(expCenter, cube.position);
 
-        if (distance < 0.01f)
+    //    if (distance < 0.01f)
+    //        return _maxExplosionForce / scale;
+
+    //    return (_maxExplosionForce / scale) / distance;
+    //}
+    private float CalculateExplosionForce(Rigidbody cube, Vector3 expCenter, float scale)
+    {//Это максимально производительный вариант для данной физической формулы.
+        Vector3 direction = cube.position - expCenter;
+        float sqrDistance = direction.x * direction.x + direction.y * direction.y + direction.z * direction.z;
+
+        if (sqrDistance < 0.01f)
             return _maxExplosionForce / scale;
 
-        return (_maxExplosionForce / scale) / distance;
+        float scaledForce = _maxExplosionForce / scale;
+        return scaledForce / Mathf.Sqrt(sqrDistance);
     }
 }
